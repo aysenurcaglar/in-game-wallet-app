@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface Item {
   id: string;
   name: string;
@@ -8,10 +10,10 @@ export interface Item {
 
 export interface Transaction {
   id: string;
-  type: 'purchase' | 'add_funds';
+  type: "purchase" | "add_funds";
   amount: number;
   itemName?: string;
-  timestamp: Date;
+  timestamp: Date | Timestamp;
 }
 
 export interface WalletContextType {
@@ -20,4 +22,3 @@ export interface WalletContextType {
   purchaseItem: (item: Item) => void;
   transactions: Transaction[];
 }
-

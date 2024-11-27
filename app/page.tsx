@@ -84,8 +84,8 @@ export default function WelcomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-400 to-blue-500 flex items-center justify-center p-4">
-      <Card className="w-full max-w-lg bg-white/10 backdrop-blur-md text-white">
+    <div className="min-h-screen bg-gradient-to-b from-purple-400 to-blue-500 flex justify-center py-24">
+      <Card className="w-full h-fit max-w-lg bg-white/10 backdrop-blur-md text-white">
         <CardHeader>
           <CardTitle className="text-2xl text-center text-yellow-300">
             Welcome to Magical Realm Wallet

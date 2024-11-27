@@ -8,9 +8,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Store } from "../../components/Store";
 import { TransactionHistory } from "../../components/TransactionHistory";
 import { Balance } from "../../components/Balance";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Dashboard() {
-  const userName = "Merlin"; // This would normally come from your authentication system
+  const { user } = useAuth();
+  const userName = user?.displayName; // This would normally come from your authentication system
   const [activeTab, setActiveTab] = useState("store");
 
   return (

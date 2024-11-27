@@ -9,7 +9,13 @@ import React, {
 import { Item, Transaction, WalletContextType } from "../types/wallet";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "./AuthContext";
-import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+  Timestamp,
+} from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -18,14 +24,33 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const { user, userData } = useAuth();
+  const [displayName, setDisplayName] = useState(user?.displayName || "");
+  const [avatarUrl, setAvatarUrl] = useState(user?.photoURL || "");
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const { toast } = useToast();
 
+  // Helper function to convert Firestore Timestamp to Date
+  const convertTimestamps = (trans: any[]): Transaction[] => {
+    return trans.map((t) => ({
+      ...t,
+      timestamp:
+        t.timestamp instanceof Timestamp ? t.timestamp.toDate() : t.timestamp,
+    }));
+  };
+
   useEffect(() => {
     if (user && userData) {
       setBalance(userData.balance);
-      setTransactions(userData.transactions);
+      // Convert timestamps when setting transactions
+      setTransactions(convertTimestamps(userData.transactions));
+
+      if (user.displayName !== userData.displayName) {
+        setDisplayName(userData.displayName);
+      }
+      if (user.photoURL !== userData.avatarUrl) {
+        setAvatarUrl(userData.avatarUrl);
+      }
     }
   }, [user, userData]);
 
@@ -115,9 +140,9 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({
     } else {
       toast({
         title: "Insufficient Funds",
-        description: `You need $${(item.price - balance).toFixed(
+        description: `You need at least $${(item.price - balance).toFixed(
           2
-        )} more to purchase this item.`,
+        )} in your balance to purchase this item.`,
         variant: "destructive",
       });
     }
