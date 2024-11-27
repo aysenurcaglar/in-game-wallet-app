@@ -32,7 +32,7 @@ export default function WelcomePage() {
     setIsLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/wallet");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
       alert("Failed to login. Please check your credentials.");
@@ -54,7 +54,7 @@ export default function WelcomePage() {
         balance: 0,
         transactions: [],
       });
-      router.push("/wallet");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Sign Up error:", error);
       alert("Failed to sign up. Please try again.");
@@ -75,7 +75,7 @@ export default function WelcomePage() {
           transactions: [],
         });
       }
-      router.push("/wallet");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Google Sign-In error:", error);
       alert("Failed to sign in with Google.");
@@ -171,11 +171,6 @@ export default function WelcomePage() {
             </svg>
             Google
           </Button>
-          <div className="text-center text-sm text-yellow-200">
-            <Link href="/wallet" className="hover:underline">
-              Continue as Guest
-            </Link>
-          </div>
         </CardFooter>
       </Card>
     </div>
