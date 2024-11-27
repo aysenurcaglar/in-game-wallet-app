@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,8 +12,77 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { auth, googleProvider, db } from "@/lib/firebase";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import { useRouter } from "next/navigation";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 export default function WelcomePage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const handleLogin = async () => {
+    setIsLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      router.push("/wallet");
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Failed to login. Please check your credentials.");
+    }
+    setIsLoading(false);
+  };
+
+  const handleSignUp = async () => {
+    setIsLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      // Initialize user data in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        balance: 0,
+        transactions: [],
+      });
+      router.push("/wallet");
+    } catch (error) {
+      console.error("Sign Up error:", error);
+      alert("Failed to sign up. Please try again.");
+    }
+    setIsLoading(false);
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      // Check if user data exists in Firestore
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (!userDoc.exists()) {
+        await setDoc(doc(db, "users", user.uid), {
+          balance: 0,
+          transactions: [],
+        });
+      }
+      router.push("/wallet");
+    } catch (error) {
+      console.error("Google Sign-In error:", error);
+      alert("Failed to sign in with Google.");
+    }
+    setIsLoading(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-400 to-blue-500 flex items-center justify-center p-4">
       <Card className="w-full max-w-lg bg-white/10 backdrop-blur-md text-white">
@@ -32,6 +103,8 @@ export default function WelcomePage() {
               id="email"
               type="email"
               placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="bg-white/20 text-white placeholder:text-white/50"
             />
           </div>
@@ -42,21 +115,29 @@ export default function WelcomePage() {
             <Input
               id="password"
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
               className="bg-white/20 text-white placeholder:text-white/50"
             />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <div className="flex flex-row space-x-4">
-            <Button className="w-56 bg-yellow-400 text-purple-900 hover:bg-yellow-300">
-              Login
+          <div className="flex flex-row space-x-4 w-full">
+            <Button
+              onClick={handleLogin}
+              disabled={isLoading}
+              className="flex-1 bg-yellow-400 text-purple-900 hover:bg-yellow-300"
+            >
+              {isLoading ? "Logging in..." : "Login"}
             </Button>
             <Button
+              onClick={handleSignUp}
+              disabled={isLoading}
               variant="outline"
-              className="w-56 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-purple-900"
+              className="flex-1 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-purple-900"
             >
-              Sign Up
+              {isLoading ? "Signing up..." : "Sign Up"}
             </Button>
           </div>
           <div className="relative w-full">
@@ -68,6 +149,8 @@ export default function WelcomePage() {
             </div>
           </div>
           <Button
+            onClick={handleGoogleSignIn}
+            disabled={isLoading}
             variant="outline"
             className="w-full border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-purple-900"
           >

@@ -1,20 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import { WalletProvider } from "../../contexts/WalletContext";
+
 import { Balance } from "../../components/Balance";
 import { Store } from "../../components/Store";
 import { TransactionHistory } from "../../components/TransactionHistory";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toaster } from "@/components/ui/toaster";
-import { ToastProvider } from "@/components/ui/toast";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
-export default function Home() {
+export default function WalletPage() {
   const [activeTab, setActiveTab] = useState("store");
 
   return (
-    <ToastProvider>
-      <WalletProvider>
+    <div>
+      <ProtectedRoute>
         <div className="min-h-screen bg-gradient-to-b from-purple-400 to-blue-500 text-white">
           <div className="container mx-auto p-4">
             <h1 className="text-4xl font-bold mb-6 text-center text-yellow-300 drop-shadow-lg">
@@ -52,7 +52,7 @@ export default function Home() {
           </div>
         </div>
         <Toaster />
-      </WalletProvider>
-    </ToastProvider>
+      </ProtectedRoute>
+    </div>
   );
 }
