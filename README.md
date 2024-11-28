@@ -23,7 +23,7 @@ This is a mock project designed to simulate an in-game purchasing experience. Wi
 ## Live Demo
 
 Explore the app without installing by visiting the live demo:  
-**[Live Demo URL](#)**
+https://magicalwallet.vercel.app/
 
 ## Tech Stack
 
