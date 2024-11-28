@@ -9,13 +9,7 @@ import React, {
 import { Item, Transaction, WalletContextType } from "../types/wallet";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "./AuthContext";
-import {
-  doc,
-  getDoc,
-  updateDoc,
-  arrayUnion,
-  Timestamp,
-} from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { User, updateProfile as updateFirebaseProfile } from "firebase/auth";
 

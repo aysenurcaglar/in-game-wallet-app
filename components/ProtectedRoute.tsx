@@ -21,7 +21,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
         variant: "destructive",
       });
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, toast]);
 
   if (loading || !user) {
     return <div>Loading...</div>; // You can replace this with a spinner

@@ -1,14 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { WalletProvider } from "../contexts/WalletContext";
-import { ToastProvider } from "@/components/ui/toast";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Store } from "../components/Store";
 import { TransactionHistory } from "../components/TransactionHistory";
 import { Balance } from "../components/Balance";
-import { useAuth } from "@/contexts/AuthContext";
 import { useWallet } from "../contexts/WalletContext";
 
 export default function Dashboard() {

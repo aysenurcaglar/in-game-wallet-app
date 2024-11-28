@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -88,10 +87,10 @@ export default function WelcomePage() {
       <Card className="w-full h-fit max-w-lg bg-white/10 backdrop-blur-md text-white">
         <CardHeader>
           <CardTitle className="text-2xl text-center text-yellow-300">
-            Welcome to Magical Realm Wallet
+            Welcome to Magical Wallet
           </CardTitle>
           <CardDescription className="text-center text-yellow-100">
-            Login or sign up to access your magical funds
+            Login or sign up to access your funds
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

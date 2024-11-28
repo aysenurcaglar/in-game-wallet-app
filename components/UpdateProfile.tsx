@@ -11,12 +11,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useWallet } from "@/contexts/WalletContext";
-import { on } from "events";
-
 interface ProfileUpdateDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;

@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useWallet } from "../contexts/WalletContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import DropIn from "braintree-web-drop-in";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import Script from "next/script";
+import dropin from "braintree-web-drop-in";
 
 declare global {
   interface Window {
-    braintree: any;
+    braintree: typeof dropin;
   }
 }
 
@@ -20,7 +20,6 @@ export const Balance: React.FC = () => {
   const [clientToken, setClientToken] = useState<string | null>(null);
   const [instance, setInstance] = useState<any>(null);
   const [isDropInReady, setIsDropInReady] = useState(false);
-  const buttonRef = useRef(null);
   const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [showDropIn, setShowDropIn] = useState(false);
@@ -215,7 +214,7 @@ export const Balance: React.FC = () => {
                 {isDropInReady && (
                   <Button
                     onClick={handleAddFunds}
-                    className="w-full mt-4 bg-purple-700 hover:bg-purple-600 text-white"
+                    className="w-full mt-4 bg-purple-600 hover:bg-purple-500 text-white"
                   >
                     Complete Payment
                   </Button>

@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import * as braintree from "braintree";
-import { getFirestore, doc, setDoc, increment } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import admin from "@/lib/firebaseAdmin";
 import { db } from "@/lib/firebase";
 
