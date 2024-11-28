@@ -2,7 +2,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import * as braintree from "braintree";
-import admin from "@/lib/firebaseAdmin";
 
 // Ensure environment is correctly set
 const environment =
@@ -32,8 +31,6 @@ export async function POST(req: NextRequest) {
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
-  const idToken = authHeader.split("Bearer ")[1];
 
   try {
     const response = await gateway.clientToken.generate({});
