@@ -34,8 +34,6 @@ export const Balance: React.FC = () => {
 
         const idToken = await user.getIdToken();
 
-        console.log("Firebase ID Token:", idToken);
-
         const response = await fetch("/api/braintree/token", {
           method: "POST",
           headers: {

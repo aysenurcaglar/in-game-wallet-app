@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,11 +17,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { ProfileUpdateDialog } from "./UpdateProfile";
+import { useWallet } from "@/contexts/WalletContext";
 
 export function Header() {
-  const { user, loading, userData } = useAuth();
+  const { user, displayName, avatarUrl } = useWallet();
   const router = useRouter();
   const { toast } = useToast();
+  const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -29,7 +33,7 @@ export function Header() {
         title: "Logged Out",
         description: "You have been successfully logged out.",
       });
-      router.push("/"); // Redirect to login page after logout
+      router.push("/login"); // Redirect to login page after logout
     } catch (error) {
       console.error("Logout Error:", error);
       toast({
@@ -53,31 +57,32 @@ export function Header() {
                   className="relative h-8 w-8 rounded-full"
                 >
                   <Avatar>
-                    {user?.photoURL ? (
-                      <AvatarImage
-                        src={user.photoURL}
-                        alt={user.displayName || ""}
-                      />
+                    {avatarUrl ? (
+                      <AvatarImage src={avatarUrl} alt={displayName || ""} />
                     ) : (
                       <AvatarFallback>
-                        {user?.displayName
-                          ? user.displayName.charAt(0).toUpperCase()
+                        {displayName
+                          ? displayName.charAt(0).toUpperCase()
                           : user.email?.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     )}
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className="text-purple-600">
                 <DropdownMenuLabel>
-                  {user?.displayName || user.email}
+                  {displayName || user.email}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/profile">Update Profile</Link>
+                <DropdownMenuItem onSelect={() => setIsProfileDialogOpen(true)}>
+                  Update Profile
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            <ProfileUpdateDialog
+              open={isProfileDialogOpen}
+              onOpenChange={setIsProfileDialogOpen}
+            />
             <Button
               variant="outline"
               className="text-white border-white bg-transparent"
@@ -91,7 +96,7 @@ export function Header() {
             <Button
               variant="outline"
               className="text-white border-white bg-transparent"
-              onClick={() => router.push("/")}
+              onClick={() => router.push("/login")}
             >
               Login
             </Button>

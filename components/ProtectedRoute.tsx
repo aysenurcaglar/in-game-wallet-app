@@ -14,7 +14,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (!loading && !user) {
-      router.replace("/");
+      router.replace("/login");
       toast({
         title: "Unauthorized Access",
         description: "You must be logged in to access this page.",

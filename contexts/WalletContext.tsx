@@ -17,6 +17,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { User, updateProfile as updateFirebaseProfile } from "firebase/auth";
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
@@ -42,17 +43,49 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({
   useEffect(() => {
     if (user && userData) {
       setBalance(userData.balance);
-      // Convert timestamps when setting transactions
       setTransactions(convertTimestamps(userData.transactions));
-
-      if (user.displayName !== userData.displayName) {
-        setDisplayName(userData.displayName);
-      }
-      if (user.photoURL !== userData.avatarUrl) {
-        setAvatarUrl(userData.avatarUrl);
-      }
+      setDisplayName(userData.displayName || user.displayName || "");
+      setAvatarUrl(userData.avatarUrl || user.photoURL || "");
     }
   }, [user, userData]);
+
+  const updateProfile = async (
+    newDisplayName: string,
+    newAvatarUrl: string
+  ) => {
+    if (!user) return;
+
+    try {
+      // Update Firebase Auth profile
+      await updateFirebaseProfile(user, {
+        displayName: newDisplayName,
+        photoURL: newAvatarUrl,
+      });
+
+      // Update Firestore
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        displayName: newDisplayName,
+        avatarUrl: newAvatarUrl,
+      });
+
+      // Update local state
+      setDisplayName(newDisplayName);
+      setAvatarUrl(newAvatarUrl);
+
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been successfully updated.",
+      });
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const addFunds = async (amount: number) => {
     if (!user) return;
@@ -140,9 +173,9 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({
     } else {
       toast({
         title: "Insufficient Funds",
-        description: `You need at least $${(item.price - balance).toFixed(
+        description: `You need $${(item.price - balance).toFixed(
           2
-        )} in your balance to purchase this item.`,
+        )} more in your balance to purchase this item.`,
         variant: "destructive",
       });
     }
@@ -150,7 +183,16 @@ export const WalletProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <WalletContext.Provider
-      value={{ balance, addFunds, purchaseItem, transactions }}
+      value={{
+        balance,
+        addFunds,
+        purchaseItem,
+        transactions,
+        user: user as User,
+        displayName,
+        avatarUrl,
+        updateProfile,
+      }}
     >
       {children}
     </WalletContext.Provider>

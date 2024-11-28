@@ -15,21 +15,21 @@ import Image from "next/image";
 const items: Item[] = [
   {
     id: "1",
-    name: "Small Gold Package",
+    name: "Armful of Gold",
     price: 4.99,
     description: "1000 gold coins",
     image: "/coin.png",
   },
   {
     id: "2",
-    name: "Medium Gold Package",
+    name: "Pot of Gold",
     price: 9.99,
     description: "2500 gold coins",
     image: "/gold-pot.png",
   },
   {
     id: "3",
-    name: "Large Gold Package",
+    name: "Treasure Chest",
     price: 19.99,
     description: "6000 gold coins",
     image: "/treasure-chest.png",
@@ -92,7 +92,7 @@ export const Store: React.FC = () => {
           <CardFooter>
             <Button
               onClick={() => purchaseItem(item)}
-              className="w-full bg-green-500 hover:bg-green-400 text-purple-900 font-bold"
+              className="w-1/2 mx-auto bg-green-400 hover:bg-green-300 text-purple-600 font-bold"
             >
               Purchase
             </Button>

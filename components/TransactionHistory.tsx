@@ -17,7 +17,7 @@ export const TransactionHistory: React.FC = () => {
     <Card className="bg-white/20 backdrop-blur-sm text-white">
       <CardHeader>
         <CardTitle className="text-2xl text-center">
-          Your Transactions
+          Your Transaction History
         </CardTitle>
       </CardHeader>
       <CardContent>

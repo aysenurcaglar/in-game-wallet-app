@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+import { User } from "firebase/auth";
 
 export interface Item {
   id: string;
@@ -21,4 +22,8 @@ export interface WalletContextType {
   addFunds: (amount: number) => void;
   purchaseItem: (item: Item) => void;
   transactions: Transaction[];
+  user: User | null; // Add this line
+  displayName: string;
+  avatarUrl: string;
+  updateProfile: (newDisplayName: string, newAvatarUrl: string) => void;
 }
