@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import Script from "next/script";
-import dropin from "braintree-web-drop-in";
+import dropin, { Dropin } from "braintree-web-drop-in";
 
 declare global {
   interface Window {
@@ -18,7 +18,7 @@ export const Balance: React.FC = () => {
   const { balance, addFunds } = useWallet();
   const [amount, setAmount] = useState("");
   const [clientToken, setClientToken] = useState<string | null>(null);
-  const [instance, setInstance] = useState<any>(null);
+  const [instance, setInstance] = useState<Dropin | null>(null);
   const [isDropInReady, setIsDropInReady] = useState(false);
   const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
@@ -55,11 +55,14 @@ export const Balance: React.FC = () => {
         } else {
           throw new Error(data.error || "Failed to get client token");
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Failed to fetch client token:", error);
         toast({
           title: "Error",
-          description: error.message || "Failed to initialize payment gateway.",
+          description:
+            error instanceof Error
+              ? error.message
+              : "Failed to initialize payment gateway.",
           variant: "destructive",
         });
       }
@@ -74,11 +77,11 @@ export const Balance: React.FC = () => {
     if (clientToken && showDropIn) {
       const initializeBraintree = async () => {
         try {
-          const dropin = await window.braintree.dropin.create({
+          const dropinInstance = await window.braintree.dropin.create({
             authorization: clientToken,
             container: "#dropin-container",
           });
-          setInstance(dropin);
+          setInstance(dropinInstance);
           setIsDropInReady(true);
         } catch (error) {
           console.error("Error initializing Braintree:", error);
@@ -162,16 +165,40 @@ export const Balance: React.FC = () => {
       } else {
         throw new Error(data.error || "Payment failed");
       }
-    } catch (error: any) {
-      {
-        /*error in html format, look into it*/
+    } catch (error: unknown) {
+      if (typeof error === "string") {
+        // If the error is a string, display it
+        console.error("Payment Error:", error);
+        toast({
+          title: "Payment Failed",
+          description: error, // Use the error string directly
+          variant: "destructive",
+        });
+      } else if (error instanceof Error) {
+        // If it's a standard JavaScript Error object
+        console.error("Payment Error:", error.message);
+        toast({
+          title: "Payment Failed",
+          description: error.message, // Display the error message
+          variant: "destructive",
+        });
+      } else if (error instanceof HTMLElement) {
+        // Handle the HTML error specifically
+        console.error("Payment Error: HTML Content", error.outerHTML);
+        toast({
+          title: "Payment Failed",
+          description: "An HTML error occurred. Check console for details.",
+          variant: "destructive",
+        });
+      } else {
+        // Fallback for unknown error types
+        console.error("Payment Error: Unknown error type", error);
+        toast({
+          title: "Payment Failed",
+          description: "An unexpected error occurred.",
+          variant: "destructive",
+        });
       }
-      console.error("Payment Error");
-      toast({
-        title: "Payment Failed",
-        description: "An error occurred during payment.",
-        variant: "destructive",
-      });
     }
   };
 

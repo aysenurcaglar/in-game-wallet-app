@@ -36,8 +36,6 @@ export async function POST(req: NextRequest) {
   const idToken = authHeader.split("Bearer ")[1];
 
   try {
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-
     const response = await gateway.clientToken.generate({});
     return NextResponse.json({ clientToken: response.clientToken });
   } catch (error) {
