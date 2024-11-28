@@ -17,7 +17,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
   }, [user, loading, router]);
 
   if (loading || !user) {
-    return <div>Loading...</div>; // You can replace this with a spinner
+    return <div className="items-center">Loading...</div>;
   }
 
   return <>{children}</>;
