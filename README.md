@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# In-Game Wallet App
 
-## Getting Started
+This is a mock project designed to simulate an in-game purchasing experience. With a clean and responsive UI, users can sign up, log in, add funds to their wallet using Braintree, purchase virtual game items, and view their transaction history.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **User Authentication**: 
+  - Email/password signup and login.
+  - Google authentication for quick access.
+    
+- **Wallet Management**: 
+  - Add funds securely using Braintree's payment gateway.
+  - View transaction history for all wallet activities, including fund additions and purchases.
+  - **Important Security Note**: Use Braintree's [dummy credit card numbers](https://developer.paypal.com/braintree/docs/guides/credit-cards/testing-go-live) for testing purposes.
+    
+- **Game Item Store**: 
+  - Browse and purchase in-game items with your wallet balance.
+  - Visuals for items sourced from Freepik (credited below).
+    
+- **API for Payment Handling**: 
+  - Integrated API built within Next.js to handle Braintree interactions seamlessly.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Live Demo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Explore the app without installing by visiting the live demo:  
+**[Live Demo URL](#)**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Tech Stack
 
-## Learn More
+- **Next.js**: Framework for building the app.
+- **Tailwind CSS & shadcn**: For crafting a clean, responsive UI.
+- **Firebase**: For user authentication and data storage.
+- **Braintree**: For secure wallet funding and payment processing.
 
-To learn more about Next.js, take a look at the following resources:
+## Setup and Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/aysenurcaglar/in-game-wallet-app.git
+   cd in-game-wallet-app
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+3. Set up Firebase:
+   - Create a project in [Firebase Console](https://console.firebase.google.com/).
+   - Enable email/password and Google authentication.
+   - Obtain the Firebase config object and add it to your `.env.local` file.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Set up Braintree:
+   - Sign up for a [Braintree sandbox account](https://sandbox.braintreegateway.com/).
+   - Obtain your merchant ID, public key, and private key.
+   - Add these credentials to your `.env.local` file.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+6. Visit `http://localhost:3000` to use the app.
+
+## Important Notes
+
+- **Testing Payments**:  
+  Please **DO NOT** use real credit card information during testing. Refer to Braintree's [testing documentation](https://developer.paypal.com/braintree/docs/guides/credit-cards/testing-go-live) for dummy credit card numbers.  
+- **Credits**:  
+  Item images used in the store are sourced from **[Freepik](https://www.freepik.com/)**.
+
+## Contributing
+
+This project is for demonstration purposes only. Contributions are not expected but are welcome for educational collaboration.
+
+---
+
+Let me know if there's anything else you'd like to include!
